@@ -1,6 +1,5 @@
 package com.parallel
 
-import java.lang.IllegalStateException
 import java.util.concurrent.*
 import kotlin.collections.ArrayList
 
@@ -34,9 +33,6 @@ class SampleSet(
         factories += swapper!!.exchange(factories.removeAt(ThreadLocalRandom.current().nextInt(0, factories.size)), 1, TimeUnit.SECONDS)
       } catch (e: TimeoutException) { }
       trim()
-
-//      if (phaser!!.registeredParties != 2)
-//        factories += swapper!!.exchange(factories.removeAt(ThreadLocalRandom.current().nextInt(0, setTotal)))
 
 
       factories.sort()
