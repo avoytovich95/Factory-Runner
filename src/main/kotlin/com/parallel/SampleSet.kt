@@ -1,14 +1,12 @@
 package com.parallel
 
-import java.util.concurrent.BlockingQueue
-import java.util.concurrent.Exchanger
-import java.util.concurrent.Phaser
-import java.util.concurrent.ThreadLocalRandom
+import java.lang.IllegalStateException
+import java.util.concurrent.*
 import kotlin.collections.ArrayList
 
 class SampleSet(
     val threadLabel: Int,
-    val stations: Array<Station?>,
+    val stations: Array<Station>,
     val swapper: Exchanger<Factory>?,
     val queue: BlockingQueue<Solution>?,
     val setTotal: Int,
@@ -32,10 +30,13 @@ class SampleSet(
       while (factories.size != setTotal * 2) {
         factories += Factory(maxX, maxY, stations)
       }
+      try {
+        factories += swapper!!.exchange(factories.removeAt(ThreadLocalRandom.current().nextInt(0, factories.size)), 1, TimeUnit.SECONDS)
+      } catch (e: TimeoutException) { }
       trim()
 
-      if (phaser!!.registeredParties != 2)
-        factories += swapper!!.exchange(factories.removeAt(ThreadLocalRandom.current().nextInt(0, setTotal)))
+//      if (phaser!!.registeredParties != 2)
+//        factories += swapper!!.exchange(factories.removeAt(ThreadLocalRandom.current().nextInt(0, setTotal)))
 
 
       factories.sort()

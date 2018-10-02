@@ -21,7 +21,7 @@ object Main: ActionListener {
 
   var samples: Array<SampleSet?>? = null
   var controller: Controller? = null
-  var stations: Array<Station?>? = null
+  var stations: Array<Station>? = null
 
   var maxX = 0
   var maxY = 0
@@ -42,21 +42,6 @@ object Main: ActionListener {
 
 
   override fun actionPerformed(e: ActionEvent?) {
-    queue = null
-    exchanger = null
-    phaser = null
-
-    if (samples != null) {
-      samples!!.forEach { i -> i!!.clear() }
-      samples!!.fill(null)
-    }
-    controller = null
-    if (stations != null)
-      stations!!.fill(null)
-    stations = null
-
-
-
     if (display.allFilled()) {
       queue = LinkedBlockingQueue<Solution>()
       exchanger = Exchanger()
@@ -120,7 +105,6 @@ class Controller(val ui: Display, val queue: BlockingQueue<Solution>?, val phase
     }
 
     ui.updateProgress(0)
-//    ui.runButton.isEnabled = true
     ui.enableAll()
   }
 

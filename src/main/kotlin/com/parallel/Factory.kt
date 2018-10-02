@@ -11,7 +11,7 @@ class Factory(private val maxX: Int, private val maxY: Int): Comparable<Factory>
     }
   }
 
-  private lateinit var stations: Array<Station?>
+  private lateinit var stations: Array<Station>
   private var layout = Array(maxX) { _ -> Array(maxY) { -1 } }
 
   // Variables for calculating the fitness of the factory
@@ -26,11 +26,11 @@ class Factory(private val maxX: Int, private val maxY: Int): Comparable<Factory>
   var generation = 0
   val mutationProb = 25
 
-  constructor(maxX: Int, maxY: Int, stations: Array<Station?>): this(maxX, maxY) {
+  constructor(maxX: Int, maxY: Int, stations: Array<Station>): this(maxX, maxY) {
     placeStations(stations)
   }
 
-  fun placeStations(stations: Array<Station?>) {
+  fun placeStations(stations: Array<Station>) {
     this.stations = stations.clone()
     for (i in 0 until this.stations.size) {
       var x: Int
@@ -166,9 +166,9 @@ class Factory(private val maxX: Int, private val maxY: Int): Comparable<Factory>
         if (layout[x][y] != -1) {
           findAffinity(x, y)
           if (quad)
-            stations[layout[x][y]]!!.setTempAffinity(affinityList)
+            stations[layout[x][y]].setTempAffinity(affinityList)
           else
-            stations[layout[x][y]]!!.setAffinity(affinityList)
+            stations[layout[x][y]].setAffinity(affinityList)
 
           affinityList.clear()
           visited.clear()
@@ -181,7 +181,7 @@ class Factory(private val maxX: Int, private val maxY: Int): Comparable<Factory>
       yRange.forEach { y ->
         if (layout[x][y] != -1) {
           count ++
-          total += stations[layout[x][y]]!!.affinity
+          total += stations[layout[x][y]].affinity
         }
       }
     }
@@ -198,7 +198,7 @@ class Factory(private val maxX: Int, private val maxY: Int): Comparable<Factory>
       if (layout[x][y] == -1)
         affinityList += 0.0
       else if (currentRecursion != 1)
-        affinityList.add((stations[layout[x][y]]!!.score.toDouble() / (currentRecursion - 1)))
+        affinityList.add((stations[layout[x][y]].score.toDouble() / (currentRecursion - 1)))
 
       visited += Coord(x, y)
 

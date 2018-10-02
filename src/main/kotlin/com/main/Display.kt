@@ -58,7 +58,7 @@ class Display: JFrame() {
     c.gridy = 6
     add(JLabel(" Runs"), c)
 
-    c.weightx = 0.5
+    c.weightx = 0.3
     c.gridx = 1
     c.gridy = 1
     add(xText, c)
@@ -150,9 +150,9 @@ class Display: JFrame() {
   }
 
   fun updateGrid(solution: Solution) {
-    lock.lock()
-    try {
-      SwingUtilities.invokeLater {
+    SwingUtilities.invokeLater {
+      lock.lock()
+      try {
         gridPanel.removeAll()
         for (y in maxY - 1 downTo 0) {
           for (x in 0 until maxX) {
@@ -162,19 +162,22 @@ class Display: JFrame() {
         }
         gridPanel.updateUI()
         repaint()
+      } finally {
+        lock.unlock()
       }
-    } finally {
-      lock.unlock()
     }
   }
 
   fun updateProgress(progress: Int) {
-    lock.lock()
     SwingUtilities.invokeLater {
-      this.progress.value = progress
-      repaint()
+      lock.lock()
+      try {
+        this.progress.value = progress
+        repaint()
+      } finally {
+        lock.unlock()
+      }
     }
-    lock.unlock()
   }
 
   fun disableAll() {
@@ -212,15 +215,3 @@ class Display: JFrame() {
     private const val HEIGHT = 600
   }
 }
-
-//fun main(args: Array<String>) {
-//  val d = Display()
-//  d.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-//  d.isVisible = true
-//
-//
-//  val stations = Array(15) { Station(0) }
-//  val factory = Factory(5, 5, stations)
-//  d.setGrid(5, 5)
-//  d.updateGrid(factory.getSolution())
-//}
