@@ -13,22 +13,22 @@ import javax.swing.SwingUtilities
 
 object Main: ActionListener {
 
-  val display = Display()
+  private val display = Display()
 
-  var queue: BlockingQueue<Solution>? = null
-  var exchanger: Exchanger<Factory>? = null
-  var phaser: Phaser? = null
+  private var queue: BlockingQueue<Solution> = LinkedBlockingQueue<Solution>()
+  private var exchanger = Exchanger<Factory>()
+  private var phaser = Phaser()
 
-  var samples: Array<SampleSet?>? = null
-  var controller: Controller? = null
-  var stations: Array<Station>? = null
+  private var stations: Array<Station>? = null
+  private var controller: Controller? = null
+  private var samples: Array<SampleSet>? = null
 
-  var maxX = 0
-  var maxY = 0
-  var runs = 0
-  var stationCount = 0
-  var factories = 0
-  var threads = 0
+  private var maxX = 0
+  private var maxY = 0
+  private var runs = 0
+  private var stationCount = 0
+  private var factories = 0
+  private var threads = 0
 
   @JvmStatic
   fun main(args: Array<String>) {
@@ -42,11 +42,11 @@ object Main: ActionListener {
 
 
   override fun actionPerformed(e: ActionEvent?) {
-    if (display.allFilled()) {
-      queue = LinkedBlockingQueue<Solution>()
-      exchanger = Exchanger()
-      phaser = Phaser()
+    stations = null
+    controller = null
+    samples = null
 
+    if (display.allFilled()) {
       maxX = display.xText.text.toInt()
       maxY = display.yText.text.toInt()
       runs = display.runText.text.toInt()
@@ -65,7 +65,7 @@ object Main: ActionListener {
       controller = Controller(display, queue, phaser, runs)
 
       samples = Array(threads) {
-        SampleSet(label++, stations!!.clone(), exchanger, queue, factories, maxX, maxY, runs, phaser)
+        SampleSet(label++, stations!!.copyOf(), exchanger, queue, factories, maxX, maxY, runs, phaser)
       }
       Thread(controller).start()
       samples!!.forEach { s -> Thread(s).start() }
@@ -74,16 +74,21 @@ object Main: ActionListener {
 
 }
 
-class Controller(val ui: Display, val queue: BlockingQueue<Solution>?, val phaser: Phaser?, val runs: Int): Runnable{
+class Controller(
+    private val ui: Display,
+    private val queue: BlockingQueue<Solution>?,
+    private val phaser: Phaser,
+    private val runs: Int
+): Runnable{
 
-  var run = 0
-  var progress = 0
+  private var run = 0
+  private var progress = 0
 
   override fun run() {
     var bestSolution = Solution(1, 1, 0.0)
     var solution: Solution
 
-    while (phaser!!.registeredParties != 0) {
+    while (phaser.registeredParties != 0) {
 
       try {
         solution = queue!!.poll(500, TimeUnit.MILLISECONDS)

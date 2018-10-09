@@ -210,7 +210,7 @@ class Factory(private val maxX: Int, private val maxY: Int): Comparable<Factory>
     }
   }
 
-  fun mutate() {
+  private fun mutate() {
     mutations++
     val mutations = ThreadLocalRandom.current().nextInt(1, Math.floor((maxX * maxY).toDouble() / 2).toInt())
 
@@ -228,10 +228,6 @@ class Factory(private val maxX: Int, private val maxY: Int): Comparable<Factory>
 
   override fun toString(): String {
     return "<Generation: $generation | Fitness: $fitness | Mutations: $mutations>"
-  }
-
-  fun toShortString(): String {
-    return "<$generation | ${"%.4f".format(fitness)} | $mutations>"
   }
 
   fun getSolution() = Solution(maxX, maxY, this)

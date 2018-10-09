@@ -35,69 +35,70 @@ class Display: JFrame() {
   }
 
   private fun createForm() {
-    val c = GridBagConstraints()
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 0.1
-    c.weighty = 0.1
-    c.gridx = 0
-    c.gridy = 1
-    add(JLabel(" X"), c)
+    GridBagConstraints().run {
+      fill = GridBagConstraints.HORIZONTAL
+      weightx = 0.1
+      weighty = 0.1
+      gridx = 0
+      gridy = 1
+      add(JLabel(" X"), this)
 
-    c.gridy = 2
-    add(JLabel(" Y"), c)
+      gridy = 2
+      add(JLabel(" Y"), this)
 
-    c.gridy = 3
-    add(JLabel(" Stations"), c)
+      gridy = 3
+      add(JLabel(" Stations"), this)
 
-    c.gridy = 4
-    add(JLabel(" Factories"), c)
+      gridy = 4
+      add(JLabel(" Factories"), this)
 
-    c.gridy = 5
-    add(JLabel(" Threads"), c)
+      gridy = 5
+      add(JLabel(" Threads"), this)
 
-    c.gridy = 6
-    add(JLabel(" Runs"), c)
+      gridy = 6
+      add(JLabel(" Runs"), this)
 
-    c.weightx = 0.3
-    c.gridx = 1
-    c.gridy = 1
-    add(xText, c)
+      weightx = 0.3
+      gridx = 1
+      gridy = 1
+      add(xText, this)
 
-    c.gridy = 2
-    add(yText, c)
+      gridy = 2
+      add(yText, this)
 
-    c.gridy = 3
-    add(stationsText, c)
+      gridy = 3
+      add(stationsText, this)
 
-    c.gridy = 4
-    add(factoriesText, c)
+      gridy = 4
+      add(factoriesText, this)
 
-    c.gridy = 5
-    add(threadsText, c)
+      gridy = 5
+      add(threadsText, this)
 
-    c.gridy = 6
-    add(runText, c)
+      gridy = 6
+      add(runText, this)
 
-    c.gridwidth = 2
-    c.gridx = 0
-    c.gridy = 7
-    add(runButton, c)
+      gridwidth = 2
+      gridx = 0
+      gridy = 7
+      add(runButton, this)
 
-    createGrid(10, 10)
+      createGrid(10, 10)
 
-    c.gridwidth = 3
-    c.gridx = 0
-    c.gridy = 8
-    c.weightx = 4.0
-    add(progress, c)
+      gridwidth = 3
+      gridx = 0
+      gridy = 8
+      weightx = 4.0
+      add(progress, this)
 
-    c.gridwidth = 3
-    c.gridx = 0
-    c.gridy = 0
-    c.fill = GridBagConstraints.CENTER
-    val title = JLabel("Factory Runner")
-    title.font = Font("Consolas", Font.BOLD, 18)
-    add(title, c)
+      gridwidth = 3
+      gridx = 0
+      gridy = 0
+      fill = GridBagConstraints.CENTER
+      val title = JLabel("Factory Runner")
+      title.font = Font("Consolas", Font.BOLD, 18)
+      add(title, this)
+    }
   }
 
   private fun createGrid(x: Int, y: Int) {
@@ -116,15 +117,16 @@ class Display: JFrame() {
       }
     }
 
-    val c = GridBagConstraints()
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 3.0
-    c.gridwidth = 1
-    c.gridheight = 7
-    c.ipady = 500
-    c.gridy = 1
-    c.gridx = 2
-    add(gridPanel, c)
+    GridBagConstraints().run {
+      fill = GridBagConstraints.HORIZONTAL
+      weightx = 3.0
+      gridwidth = 1
+      gridheight = 7
+      ipady = 500
+      gridy = 1
+      gridx = 2
+      add(gridPanel, this)
+    }
   }
 
   fun setGrid(xMax: Int, yMax: Int) {

@@ -4,15 +4,15 @@ import java.util.concurrent.*
 import kotlin.collections.ArrayList
 
 class SampleSet(
-    val threadLabel: Int,
-    val stations: Array<Station>,
-    val swapper: Exchanger<Factory>?,
-    val queue: BlockingQueue<Solution>?,
-    val setTotal: Int,
-    val maxX: Int,
-    val maxY: Int,
-    val runs: Int,
-    val phaser: Phaser?
+    private val threadLabel: Int,
+    private val stations: Array<Station>,
+    private val swapper: Exchanger<Factory>,
+    private val queue: BlockingQueue<Solution>,
+    private val setTotal: Int,
+    private val maxX: Int,
+    private val maxY: Int,
+    private val runs: Int,
+    private val phaser: Phaser?
 ): Runnable {
 
   private val factories = ArrayList<Factory>()
@@ -30,7 +30,11 @@ class SampleSet(
         factories += Factory(maxX, maxY, stations)
       }
       try {
-        factories += swapper!!.exchange(factories.removeAt(ThreadLocalRandom.current().nextInt(0, factories.size)), 1, TimeUnit.SECONDS)
+        factories += swapper.exchange(
+            factories.removeAt(ThreadLocalRandom.current().nextInt(0, factories.size)),
+            1,
+            TimeUnit.SECONDS
+        )
       } catch (e: TimeoutException) { }
       trim()
 
@@ -39,7 +43,7 @@ class SampleSet(
       val solution = factories.last().getSolution()
       solution.threadLabel = this.threadLabel
       solution.run = i
-      queue!!.put(solution)
+      queue.put(solution)
 
     }
 
@@ -64,9 +68,5 @@ class SampleSet(
     while (factories.size != setTotal) {
       factories.removeAt(index++)
     }
-  }
-
-  fun clear() {
-    factories.clear()
   }
 }
